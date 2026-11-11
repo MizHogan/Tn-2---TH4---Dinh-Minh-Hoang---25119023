@@ -1,0 +1,20 @@
+[
+  {"id":"tab_th4","type":"tab","label":"TH4 MQTT","disabled":false,"info":""},
+  {"id":"broker1","type":"mqtt-broker","name":"Broker lop","broker":"broker.hivemq.com","port":"1883","clientid":"","autoConnect":true,"usetls":false,"protocolVersion":"4","keepalive":"60","cleansession":true},
+  {"id":"ui_tab1","type":"ui_tab","name":"TH4","icon":"dashboard","disabled":false,"hidden":false},
+  {"id":"ui_grp1","type":"ui_group","name":"Cam bien","tab":"ui_tab1","order":1,"disp":true,"width":"6","collapse":false},
+  {"id":"ui_grp2","type":"ui_group","name":"Dieu khien","tab":"ui_tab1","order":2,"disp":true,"width":"6","collapse":false},
+
+  {"id":"in_tele","type":"mqtt in","z":"tab_th4","name":"telemetry (chieu DI)","topic":"aet2022/nhom-01/telemetry","qos":"0","datatype":"json","broker":"broker1","x":170,"y":120,"wires":[["fn_tach","dbg1"]]},
+  {"id":"dbg1","type":"debug","z":"tab_th4","name":"telemetry","active":true,"tosidebar":true,"complete":"payload","x":420,"y":60,"wires":[]},
+  {"id":"fn_tach","type":"function","z":"tab_th4","name":"tach truong","func":"var p = msg.payload;\nreturn [\n  {payload: p.temp},\n  {payload: p.hum},\n  {payload: p.btn}\n];","outputs":3,"x":400,"y":120,"wires":[["g_temp","c_temp"],["g_hum"],["led_btn"]]},
+
+  {"id":"g_temp","type":"ui_gauge","z":"tab_th4","name":"Nhiet do","group":"ui_grp1","order":1,"width":0,"height":0,"gtype":"gage","title":"Nhiet do","label":"°C","format":"{{value | number:1}}","min":0,"max":50,"colors":["#00b500","#e6e600","#ca3838"],"x":640,"y":100,"wires":[]},
+  {"id":"g_hum","type":"ui_gauge","z":"tab_th4","name":"Do am","group":"ui_grp1","order":2,"width":0,"height":0,"gtype":"gage","title":"Do am","label":"%","format":"{{value | number:1}}","min":0,"max":100,"colors":["#ca3838","#e6e600","#00b500"],"x":640,"y":160,"wires":[]},
+  {"id":"c_temp","type":"ui_chart","z":"tab_th4","name":"Chart nhiet do","group":"ui_grp1","order":3,"width":0,"height":0,"label":"Nhiet do theo thoi gian","chartType":"line","legend":"false","xformat":"HH:mm:ss","interpolate":"linear","nodata":"Cho du lieu...","dot":false,"ymin":"","ymax":"","removeOlder":"5","removeOlderPoints":"","removeOlderUnit":"60","cutout":0,"useOneColor":false,"colors":["#1f77b4","#aec7e8","#ff7f0e","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5"],"useOldStyle":false,"outputs":1,"x":660,"y":40,"wires":[[]]},
+  {"id":"led_btn","type":"ui_led","z":"tab_th4","name":"Den bao nut","group":"ui_grp2","order":1,"width":0,"height":0,"label":"Nut tren kit","labelPlacement":"left","labelAlignment":"left","colorForValue":[{"color":"#808080","value":"0","valueType":"num"},{"color":"#00b500","value":"1","valueType":"num"}],"allowColorForValue":true,"x":650,"y":220,"wires":[]},
+
+  {"id":"btn_on","type":"ui_button","z":"tab_th4","name":"BAT LED","group":"ui_grp2","order":2,"width":0,"height":0,"passthru":false,"label":"BAT LED","tooltip":"","color":"","bgcolor":"","className":"","icon":"","payload":"1","payloadType":"str","topic":"","topicType":"str","x":160,"y":300,"wires":[["out_led"]]},
+  {"id":"btn_off","type":"ui_button","z":"tab_th4","name":"TAT LED","group":"ui_grp2","order":3,"width":0,"height":0,"passthru":false,"label":"TAT LED","tooltip":"","color":"","bgcolor":"","className":"","icon":"","payload":"0","payloadType":"str","topic":"","topicType":"str","x":160,"y":360,"wires":[["out_led"]]},
+  {"id":"out_led","type":"mqtt out","z":"tab_th4","name":"cmd/led (chieu VE)","topic":"aet2022/nhom-01/cmd/led","qos":"0","retain":"false","broker":"broker1","x":430,"y":330,"wires":[]}
+]
